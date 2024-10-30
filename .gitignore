@@ -1,4 +1,6 @@
-# BleuRaven Blender Addon Manager
+# BleuRaven Blender Addons
+/generated_builds
+**.zip
 **.blend[1-32]*
 .git/
 .vscode/
