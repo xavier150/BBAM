@@ -124,7 +124,7 @@ This is the file use in my addon [Blender For UnrealEngine]https://github.com/xa
 }
 ```
 
-I will add more detail in the wiki later is people use it and need help.
+I will add more detail in the wiki later if peoples use it and need help. Feel free to ask on my Discord.
 
 ## Discord Community
 If you need help or want to check out my side projects, join the Discord community!  
