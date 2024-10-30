@@ -35,4 +35,4 @@ blender_manifest = "blender_manifest.toml"
 manifest_schema_version = "1.0.0"
 
 # Folder where the generated build files will be stored
-build_output_folder = "generated_build"
+build_output_folder = "generated_builds"
