@@ -88,11 +88,9 @@ This is the file use in my addon [Blender For UnrealEngine]https://github.com/xa
         "unrealengine_assets_exporter_4.2": {   
             "generate_method": "EXTENTION_COMMAND",
             "auto_install_range": [[4,2,0], [4,3,0]],
-            "use_extension_build_command": true,
             "naming": "{Name}-{Version}.zip",
             "module": "blender-for-unrealengine", 
-            "pkg_id": "unrealengine_assets_exporter", 
-            "directory": "P:\\GitHubBlenderAddon\\Blender-For-UnrealEngine-Addons",
+            "pkg_id": "unrealengine_assets_exporter",
             "exclude_paths": [
                 "fbxio/generator/",
                 "fbxio/run_generator.py",
@@ -110,11 +108,9 @@ This is the file use in my addon [Blender For UnrealEngine]https://github.com/xa
         "unrealengine_assets_exporter_2.8": {
             "generate_method": "SIMPLE_ZIP",
             "auto_install_range": [[2,80,0], [4,1,0]],
-            "use_extension_build_command": false,
             "naming": "{Name}-{Version}-blender2.8-4.1.zip",
             "module": "blender-for-unrealengine", 
-            "pkg_id": "unrealengine_assets_exporter", 
-            "directory": "P:\\GitHubBlenderAddon\\Blender-For-UnrealEngine-Addons",
+            "pkg_id": "unrealengine_assets_exporter",
             "exclude_paths": [
                 "fbxio/generator/",
                 "fbxio/run_generator.py",
