@@ -35,10 +35,15 @@ for dir in addon_directories:
 ```
 
 3. You will found a new file "addon_generate_config.json" at the root of your addons. Edit it with you addon config.
-4. Run addon the example script to generate and install you addons.
+4. Run again the example script to generate and install you addons.  
+5. Read the Blender console to see details about the generate and potential issues.  
+  You will find the zip files in generated_build at the side of your addon.
+
+![image](https://github.com/user-attachments/assets/85fc6fe6-4d17-4441-bd4e-4fb6d0d6809e)
+
 
 # Features
-- With BBAM no need to create a blender_manifest.toml or a bl_info = {} in the __init__.py file.
+- With BBAM no need to create a blender_manifest.toml or a bl_info = {} in the __init__.py file.  
   You set all the addon config in "addon_generate_config.json"
 
 - BBAM can generate several addon builds, depending the use. See the addon addon_generate_config.json Exemple
