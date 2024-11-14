@@ -36,3 +36,5 @@ manifest_schema_version = "1.0.0"
 
 # Folder where the generated build files will be stored
 build_output_folder = "generated_builds"
+
+show_debug = False

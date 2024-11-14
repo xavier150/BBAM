@@ -89,7 +89,7 @@ def install_from_blender_with_build_data(addon_path, addon_manifest_data):
     for target_build_name in addon_manifest_data["builds"]:
         # Create temporary addon folder
         temp_addon_path = addon_file_management.create_temp_addon_folder(
-            addon_path, addon_manifest_data, target_build_name
+            addon_path, addon_manifest_data, target_build_name, config.show_debug
         )
         # Zip the addon folder for installation
         zip_file = addon_file_management.zip_addon_folder(

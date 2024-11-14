@@ -24,32 +24,11 @@
 # ----------------------------------------------
 
 import os
-import toml
-from toml.encoder import TomlEncoder
 
 from . import config
 from . import utils
 from . import blender_utils
 
-class MultiLineTomlEncoder(TomlEncoder):
-    """
-    Custom TOML encoder that formats lists to display on multiple lines in the output.
-    """
-    def dump_list(self, v):
-        """
-        Formats a list to display each item on a new line in the TOML output.
-
-        Parameters:
-            v (list): The list to format for multi-line display.
-
-        Returns:
-            str: A formatted multi-line string representation of the list.
-        """
-        output = "[\n"
-        for item in v:
-            output += f"  {toml.encoder._dump_str(item)},\n"  # Indent each item
-        output += "]"
-        return output
 
 def generate_new_manifest(addon_generate_config_data, target_build_name):
     """
@@ -81,15 +60,53 @@ def generate_new_manifest(addon_generate_config_data, target_build_name):
     data["website"] = manifest_data["website_url"]
     data["type"] = manifest_data["type"]
     data["tags"] = manifest_data["tags"]
-    data["permissions"] = manifest_data["permissions"]
     data["blender_version_min"] = utils.get_str_version(build_data["blender_version_min"])
     data["license"] = manifest_data["license"]
     data["copyright"] = manifest_data["copyright"]
+    data["permissions"] = manifest_data["permissions"]
     return data
+
+def dump_list(v):
+    """
+    Formats a list to display each item on a new line in the TOML output.
+
+    Parameters:
+        v (list): The list to format for multi-line display.
+
+    Returns:
+        str: A formatted multi-line string representation of the list.
+    """
+    output = "[\n"
+    for item in v:
+        output += f"  \"{str(item)}\",\n"  # Indent each item and escape as a string
+    output += "]"
+    return output
+
+def dict_to_toml(data):
+    """
+    Convert a dictionary to a TOML-formatted string.
+
+    Parameters:
+        data (dict): The dictionary to format.
+
+    Returns:
+        str: A TOML-formatted string representation of the dictionary.
+    """
+    toml_string = ""
+    for key, value in data.items():
+        if isinstance(value, dict):
+            toml_string += f"[{key}]\n" + dict_to_toml(value)  # Recursive call for nested dictionaries
+        elif isinstance(value, list):
+            toml_string += f"{key} = {dump_list(value)}\n"
+        elif isinstance(value, str):
+            toml_string += f"{key} = \"{value}\"\n"  # Add quotes for strings
+        else:
+            toml_string += f"{key} = {value}\n"
+    return toml_string
 
 def save_addon_manifest(addon_path, data, show_debug=False):
     """
-    Saves the addon manifest as a TOML file using the MultiLineTomlEncoder for custom formatting.
+    Saves the addon manifest as a TOML file manually.
 
     Parameters:
         addon_path (str): Path to the addon's root folder.
@@ -98,9 +115,12 @@ def save_addon_manifest(addon_path, data, show_debug=False):
     """
     addon_manifest_path = os.path.join(addon_path, config.blender_manifest)
 
-    # Save the manifest as a TOML file with custom encoder for multi-line list formatting
+    # Generate TOML content manually
+    toml_content = dict_to_toml(data)
+
+    # Save to file
     with open(addon_manifest_path, "w") as file:
-        toml.dump(data, file, encoder=MultiLineTomlEncoder())
+        file.write(toml_content)
 
     if show_debug:
         print(f"Addon manifest saved successfully at: {addon_manifest_path}")
