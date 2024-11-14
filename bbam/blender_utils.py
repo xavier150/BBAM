@@ -24,6 +24,7 @@
 # ----------------------------------------------
 
 import os
+from . import utils
 
 def uninstall_addon_from_blender(bpy, pkg_id, module):
     """
@@ -56,11 +57,17 @@ def install_zip_addon_from_blender(bpy, zip_file, module):
     if bpy.app.version >= (4, 2, 0):
         # For Blender version 4.2.0 and above, install as an extension
         print("Installing as extension...", zip_file)
-        bpy.ops.extensions.package_install_files(repo="user_default", filepath=zip_file, enable_on_install=True)
-        print("Extension installation complete.")
+        try:
+            bpy.ops.extensions.package_install_files(repo="user_default", filepath=zip_file, enable_on_install=True)
+            print("Extension installation complete.")
+        except Exception as e:
+            utils.print_red("An error occurred during installation:", str(e))
     else:
         # For earlier versions, install and enable as an addon
         print("Installing as add-on...", zip_file)
-        bpy.ops.preferences.addon_install(overwrite=True, filepath=zip_file)
-        bpy.ops.preferences.addon_enable(module=module)
-        print("Add-on installation complete.")
+        try:
+            bpy.ops.preferences.addon_install(overwrite=True, filepath=zip_file)
+            bpy.ops.preferences.addon_enable(module=module)
+            print("Add-on installation complete.")
+        except Exception as e:
+            utils.print_red("An error occurred during installation:", str(e))

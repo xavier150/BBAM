@@ -23,6 +23,9 @@
 #  XavierLoux.com
 # ----------------------------------------------
 
+def print_red(*values):
+    print("\033[91m", *values, "\033[0m")
+
 def get_str_version(data):
     """
     Converts a list of version components into a version string.
