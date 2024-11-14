@@ -32,9 +32,10 @@ from . import bl_info_generate
 from . import config
 from . import utils
 from . import blender_exec
+from . import blender_utils
 
 
-def copy_addon_folder(src, dst, exclude_paths=[]):
+def copy_addon_folder(src, dst, exclude_paths=[], include_paths=[]):
     """
     Copies the addon folder from 'src' to 'dst' while excluding specified files and folders.
 
@@ -43,15 +44,29 @@ def copy_addon_folder(src, dst, exclude_paths=[]):
         dst (str): Destination path for the copied addon.
         exclude_paths (list): List of file or folder paths to exclude during the copy process.
     """
+    # Normalize paths for comparison
+    exclude_paths = [os.path.normpath(path) for path in exclude_paths]
+    include_paths = [os.path.normpath(path) for path in include_paths]
+
     # Ignore function to exclude specific files/folders during the copy
     def ignore_files(dir, files):
         ignore_list = []
         for file in files:
             file_path = os.path.join(dir, file)
             relative_path = os.path.normpath(os.path.relpath(file_path, src))
-            # Exclude files or folders based on relative path matching exclude_paths
+
+            # Skip directories if only files should be ignored
+            if os.path.isdir(file_path):
+                continue
+
+            # Check if the file path should be included
+            if any(relative_path.startswith(os.path.normpath(path)) for path in include_paths):
+                continue  # Skip excluding this file or folder
+
+            # Check if the file path should be excluded
             if any(relative_path.startswith(os.path.normpath(path)) for path in exclude_paths):
                 ignore_list.append(file)
+                print("Add ->", file)
         return set(ignore_list)
 
     shutil.copytree(src, dst, ignore=ignore_files)
@@ -79,8 +94,9 @@ def create_temp_addon_folder(addon_path, addon_manifest_data, target_build_name,
 
     # Step 2: Copy addon folder to temporary directory, excluding specified paths
     exclude_paths = build_data.get("exclude_paths", [])
+    include_paths = build_data.get("include_paths", [])
     exclude_paths.append("bbam/")  # Exclude addon manager from the final build
-    copy_addon_folder(addon_path, temp_addon_path, exclude_paths)
+    copy_addon_folder(addon_path, temp_addon_path, exclude_paths, include_paths)
     print(f"Copied build '{target_build_name}' to temporary location: {temp_addon_path}")
 
     # Step 3: Generate addon manifest based on generation method

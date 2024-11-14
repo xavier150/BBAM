@@ -29,6 +29,7 @@ from toml.encoder import TomlEncoder
 
 from . import config
 from . import utils
+from . import blender_utils
 
 class MultiLineTomlEncoder(TomlEncoder):
     """
@@ -84,11 +85,6 @@ def generate_new_manifest(addon_generate_config_data, target_build_name):
     data["blender_version_min"] = utils.get_str_version(build_data["blender_version_min"])
     data["license"] = manifest_data["license"]
     data["copyright"] = manifest_data["copyright"]
-
-    # Add build-specific data
-    data["build"] = {}
-    data["build"]["paths_exclude_pattern"] = build_data["exclude_paths"]
-
     return data
 
 def save_addon_manifest(addon_path, data, show_debug=False):

@@ -23,6 +23,8 @@
 #  XavierLoux.com
 # ----------------------------------------------
 
+import os
+
 def uninstall_addon_from_blender(bpy, pkg_id, module):
     """
     Uninstalls an addon from Blender, using the correct method based on Blender's version.
