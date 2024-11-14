@@ -66,7 +66,6 @@ def copy_addon_folder(src, dst, exclude_paths=[], include_paths=[]):
             # Check if the file path should be excluded
             if any(relative_path.startswith(os.path.normpath(path)) for path in exclude_paths):
                 ignore_list.append(file)
-                print("Add ->", file)
         return set(ignore_list)
 
     shutil.copytree(src, dst, ignore=ignore_files)
