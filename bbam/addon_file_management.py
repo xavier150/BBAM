@@ -172,7 +172,7 @@ def zip_addon_folder(src, addon_path, addon_manifest_data, target_build_name, bl
         print("Start creating simple ZIP file with root folder using shutil")
 
         # Specify the root folder name inside the ZIP file
-        root_folder_name = "my_addon_root_folder"
+        root_folder_name = build_data["module"]
 
         # Create a temporary directory
         with tempfile.TemporaryDirectory() as temp_dir:

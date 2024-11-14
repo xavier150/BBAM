@@ -24,8 +24,9 @@
 # ----------------------------------------------
 
 import os
-import re
+import ast
 from . import config
+from . import utils
 
 def generate_new_bl_info(addon_generate_config_data, target_build_name):
     """
@@ -63,6 +64,18 @@ def generate_new_bl_info(addon_generate_config_data, target_build_name):
 
     return data
 
+def format_bl_info_lines(data):
+    # Format the new `bl_info` dictionary with line breaks and indentation
+    new_bl_info_lines = ["bl_info = {"]
+    items = list(data.items())
+    for i, (key, value) in enumerate(items):
+        if i < len(items) - 1:
+            new_bl_info_lines.append(f"    '{key}': {repr(value)},")
+        else:
+            new_bl_info_lines.append(f"    '{key}': {repr(value)}")
+    new_bl_info_lines.append("}\n")  # Close `bl_info` and add an extra line break for readability
+    return new_bl_info_lines
+
 def update_file_bl_info(addon_path, data, show_debug=False):
     """
     Updates the `bl_info` dictionary in the addon's __init__.py file with new data.
@@ -74,28 +87,85 @@ def update_file_bl_info(addon_path, data, show_debug=False):
     """
     addon_init_file_path = os.path.join(addon_path, "__init__.py")
 
-    # Format the new `bl_info` dictionary with line breaks and indentation
-    new_bl_info_lines = ["bl_info = {\n"]
-    for key, value in data.items():
-        new_bl_info_lines.append(f"    '{key}': {repr(value)},\n")
-    new_bl_info_lines.append("}\n\n")  # Close `bl_info` and add an extra line break for readability
+    result = replace_file_bl_info(addon_init_file_path, data)
+    if result is False:
+        result = add_new_bl_info(addon_init_file_path, data)
 
-    # Read the existing lines of the __init__.py file
-    with open(addon_init_file_path, 'r') as file:
-        lines = file.readlines()
+    if result is False:
+        utils.print_red(f"Failed to replace or add bl_info! File: {addon_init_file_path}")
+    
+    if search_file_bl_info(addon_init_file_path):
+        if show_debug:
+            print(f"Addon bl_info successfully updated at: {addon_init_file_path}")
+            return
+    else:
+        utils.print_red(f"Failed to found bl_info after update!: {addon_init_file_path}")
 
-    # Write the updated lines, replacing the old `bl_info` if it exists
-    with open(addon_init_file_path, "w") as file:
-        in_bl_info = False
-        for line in lines:
-            # Detect the start of `bl_info`
-            if line.strip().startswith("bl_info = {") and not in_bl_info:
-                in_bl_info = True
-                file.writelines(new_bl_info_lines)  # Write the new `bl_info` dictionary
-            elif in_bl_info and line.strip() == "}":
-                in_bl_info = False  # End of `bl_info`, but skip this closing brace line
-            elif not in_bl_info:
-                file.write(line)  # Write all other lines unchanged
 
-    if show_debug:
-        print(f"Addon bl_info successfully updated at: {addon_init_file_path}")
+
+def search_file_bl_info(file_path):
+    with open(file_path, "r") as file:
+        content = file.read()
+        tree = ast.parse(content)
+
+    # Locate existing `bl_info` definition
+    for node in tree.body:
+        if isinstance(node, ast.Assign) and any(target.id == "bl_info" for target in node.targets):
+            return True
+    return False
+
+def replace_file_bl_info(file_path, data):
+    with open(file_path, "r") as file:
+        content = file.read()
+        tree = ast.parse(content)
+
+    # Locate existing `bl_info` definition
+    start_bl_info = None
+    end_bl_info = None
+    for index, node in enumerate(tree.body):
+        if isinstance(node, ast.Assign) and any(target.id == "bl_info" for target in node.targets):
+            start_bl_info = node.lineno - 1  # Start line of `bl_info`
+            end_bl_info = node.end_lineno  # End line of `bl_info`
+            break
+
+    if start_bl_info is not None and end_bl_info is not None:
+        lines = content.splitlines()
+        # Remove the existing `bl_info` block
+        del lines[start_bl_info:end_bl_info]
+        # Insert the new `bl_info` block at the same position
+        new_bl_info_lines = format_bl_info_lines(data)
+        lines[start_bl_info:start_bl_info] = new_bl_info_lines
+
+        # Write the updated content back to the file
+        with open(file_path, "w") as file:
+            file.write("\n".join(lines))
+        return True
+    return False
+
+def add_new_bl_info(file_path, data):
+    with open(file_path, "r") as file:
+        content = file.read()
+        tree = ast.parse(content)
+
+    # Find the line number of the `register` function
+    index_register = None
+    for index, node in enumerate(tree.body):
+        if isinstance(node, ast.FunctionDef) and node.name == "register":
+            index_register = node.lineno - 1  # `lineno` starts at 1, so we subtract 1 for zero-based index
+            break
+
+    lines = content.splitlines()
+    new_bl_info_lines = format_bl_info_lines(data)
+
+    if index_register is not None:
+        # Insert `bl_info` lines before the `register` function
+        for i, line in enumerate(new_bl_info_lines):
+            lines.insert(index_register + i, line)
+    else:
+        # If `register` is not found, append `bl_info` at the end
+        lines.extend(new_bl_info_lines)
+
+    # Write the updated content back to the file
+    with open(file_path, "w") as file:
+        file.write("\n".join(lines))
+    return True
