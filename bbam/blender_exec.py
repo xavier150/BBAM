@@ -41,8 +41,8 @@ def build_extension(src, dst, blender_executable_path):
     """
     command = [
         blender_executable_path,
-        '--command', 'extension', 'build',
         '--factory-startup',
+        '--command', 'extension', 'build',
         '--source-dir', src,
         '--output-filepath', dst,
     ]
@@ -74,8 +74,8 @@ def validate_extension(path, blender_executable_path):
     """
     validate_command = [
         blender_executable_path,
-        '--command', 'extension', 'validate', 
         '--factory-startup',
+        '--command', 'extension', 'validate', 
         path,
     ]
     result = subprocess.run(validate_command, capture_output=True, text=True)
