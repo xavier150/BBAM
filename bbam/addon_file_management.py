@@ -139,6 +139,7 @@ def generate_addon_files(
 
 def get_zip_output_filename(
     addon_path: str, 
+    addon_config: BBAM_AddonConfig,
     build_config: BBAM_AddonBuild,
 ):
     """
@@ -146,7 +147,7 @@ def get_zip_output_filename(
     """
 
     # Formatting output filename
-    version_str = build_config.get_version_as_string()
+    version_str = addon_config.addon_manifest.get_version_as_string()
     output_folder_path = os.path.abspath(os.path.join(addon_path, '..', config.build_output_folder))
     formatted_file_name = build_config.naming.replace("{Name}", build_config.pkg_id).replace("{Version}", version_str)
     output_filepath = os.path.join(output_folder_path, formatted_file_name)
@@ -155,6 +156,7 @@ def get_zip_output_filename(
 def zip_addon_folder(
     src: str, 
     addon_path: str, 
+    addon_config: BBAM_AddonConfig,
     build_config: BBAM_AddonBuild,
     blender_executable_path: str
 ) -> Optional[str]:
@@ -165,7 +167,7 @@ def zip_addon_folder(
     generate_method = build_config.generate_method
 
     # Define output file path and ensure the output directory exists
-    output_filepath = get_zip_output_filename(addon_path, build_config)
+    output_filepath = get_zip_output_filename(addon_path, addon_config, build_config)
     output_dir = os.path.dirname(output_filepath)
     os.makedirs(output_dir, exist_ok=True)
 

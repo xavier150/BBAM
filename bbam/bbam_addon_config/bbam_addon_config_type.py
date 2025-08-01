@@ -206,7 +206,7 @@ class BBAM_AddonBuild:
 
         return True
 
-    def get_version_as_string(self) -> str:
+    def get_min_blender_version_as_string(self) -> str:
         """
         Returns the minimum Blender version as a string in the format "X.Y.Z".
         """
