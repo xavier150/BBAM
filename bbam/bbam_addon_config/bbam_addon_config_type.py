@@ -177,6 +177,7 @@ class BBAM_AddonBuild:
 
         self.exclude_paths: List[str] = []
         self.include_paths: List[str] = []
+        self.hard_modifications: Dict[str, Any] = {}  # For hard modifications in python files
 
         # Minimum supported Blender version - use at least version 4.2.0
         self.blender_version_min: List[int] = [4, 2, 0]
@@ -200,6 +201,7 @@ class BBAM_AddonBuild:
         # Optional fields
         self.exclude_paths = data.get("exclude_paths", [])
         self.include_paths = data.get("include_paths", [])
+        self.hard_modifications = data.get("hard_modifications", {})
         self.blender_version_min = data.get("blender_version_min", [4, 2, 0])
 
         return True

@@ -118,6 +118,23 @@ def generate_addon_files(
     elif generate_method == BBAM_GenerateMethod.SIMPLE_ZIP:
         new_manifest = bl_info_generate.generate_new_bl_info(addon_config, build_config)
         bl_info_generate.update_file_bl_info(addon_path, new_manifest, show_debug)
+
+    # Apply hard modifications in python files
+    if build_config.hard_modifications:
+        for root, dirs, files in os.walk(addon_path):
+            for file in files:
+                if file.endswith('.py'):
+                    file_path = os.path.join(root, file)
+                    with open(file_path, 'r') as f:
+                        content = f.read()
+                    
+                    for modification_key in build_config.hard_modifications:
+                        if modification_key == "replace":
+                            for modification in build_config.hard_modifications[modification_key]:
+                                content = content.replace(modification["search"], modification["replace"])
+
+                    with open(file_path, 'w') as f:
+                        f.write(content)
     
 
 def get_zip_output_filename(
