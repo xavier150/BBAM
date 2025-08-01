@@ -70,7 +70,7 @@ def install_from_blender_with_build_data(
         build_data = addon_config.builds[build_key]
         should_install = utils.get_should_install_for_curren_version(build_data.auto_install_range)
         if current_only:
-            # Build only for the current blender version, so build only if the addon should be installed
+            # Build only for the current Blender version, so build only if the addon should be installed
             should_build = should_install
         else:
             should_build = True
