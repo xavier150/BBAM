@@ -168,7 +168,7 @@ class BBAM_AddonBuild:
         self.build_id: str = build_id
         self.generate_method: BBAM_GenerateMethod = BBAM_GenerateMethod.EXTENTION_COMMAND
         
-        # Use "LATEST" at tuple[1] to indicate the latest version.
+        # Use "LATEST" at  Tuple[1] to indicate the latest version.
         self.auto_install_range: Tuple[List[int], Union[List[int], str]] = ([0, 0, 0], [0, 0, 0])
         
         self.naming: str = "{Name}-{Version}.zip"

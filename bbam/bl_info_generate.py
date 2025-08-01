@@ -24,7 +24,7 @@
 # ----------------------------------------------
 
 import os
-from typing import Dict, Any
+from typing import Dict, Any, List
 from . import utils
 from .bbam_addon_config.bbam_addon_config_type import BBAM_AddonConfig, BBAM_AddonBuild
 
@@ -56,7 +56,7 @@ def generate_new_bl_info(
 
     return data
 
-def format_bl_info_lines(data: Dict[str, Any]) -> list[str]:
+def format_bl_info_lines(data: Dict[str, Any]) -> List[str]:
     # Format the new `bl_info` dictionary with line breaks and indentation
     new_bl_info_lines = ["bl_info = {"]
     items = list(data.items())
@@ -157,7 +157,7 @@ def replace_file_bl_info(
         del lines[start_bl_info:end_bl_info]
         
         # Format new bl_info with the same indentation
-        new_bl_info_lines: list[str] = []
+        new_bl_info_lines: List[str] = []
         bl_info_data = format_bl_info_lines(data)
         
         for bl_info_line in bl_info_data:
@@ -221,7 +221,7 @@ def add_new_bl_info(
         break
 
     # Format bl_info without indentation (at root level)
-    new_bl_info_lines: list[str] = []
+    new_bl_info_lines: List[str] = []
     bl_info_data = format_bl_info_lines(data)
     
     for bl_info_line in bl_info_data:

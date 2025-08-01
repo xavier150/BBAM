@@ -38,8 +38,8 @@ from .bbam_addon_config.bbam_addon_config_type import BBAM_AddonConfig, BBAM_Add
 def copy_addon_folder(
     src: str,
     dst: str,
-    exclude_paths: list[str] = [],
-    include_paths: list[str] = []
+    exclude_paths: List[str] = [],
+    include_paths: List[str] = []
 ):
     """
     Copies the addon folder from 'src' to 'dst' while excluding specified files and folders.
