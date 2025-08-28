@@ -105,21 +105,27 @@ def generate_addon_files(
 
     # Apply hard modifications in python files
     if build_config.hard_modifications:
-        for root, dirs, files in os.walk(addon_path):
+        for root, _, files in os.walk(addon_path):
             for file in files:
                 if file.endswith('.py'):
                     file_path = os.path.join(root, file)
-                    with open(file_path, 'r') as f:
-                        content = f.read()
-                    
-                    for modification_key in build_config.hard_modifications:
-                        if modification_key == "replace":
-                            for modification in build_config.hard_modifications[modification_key]:
-                                content = content.replace(modification["search"], modification["replace"])
 
-                    with open(file_path, 'w') as f:
-                        f.write(content)
-    
+                    try:
+                        with open(file_path, 'r') as f:
+                            content = f.read()
+                        
+                        for modification_key in build_config.hard_modifications:
+                            if modification_key == "replace":
+                                for modification in build_config.hard_modifications[modification_key]:
+                                    content = content.replace(modification["search"], modification["replace"])
+
+                        with open(file_path, 'w') as f:
+                            f.write(content)
+                    except Exception as e:
+                        text = f"Error applying hard modifications to {file_path}: {e}"
+                        red_text = f"\033[31m{text}\033[0m"
+                        print(red_text, file=sys.stderr)
+
 
 def get_zip_output_filename(
     addon_path: str, 
