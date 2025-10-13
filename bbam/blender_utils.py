@@ -26,11 +26,15 @@ def uninstall_addon_from_blender(
     if bpy.app.version >= (4, 2, 0):
         print(f"Uninstalling extension '{pkg_id}'...")
         bpy.ops.extensions.package_uninstall(repo_index=1, pkg_id=pkg_id)  # type: ignore
-        bpy.ops.preferences.addon_remove(module=module)  # type: ignore
+        bpy.ops.preferences.addon_remove(module=module)
     else:
         # For earlier versions, directly remove the addon using `addon_remove`
         print(f"Uninstalling add-on '{module}'...")
-        bpy.ops.preferences.addon_remove(module=module)  # type: ignore
+        try:
+            # may produce error in blender 2.8x
+            bpy.ops.preferences.addon_disable(module=module)
+        except Exception as e:
+            utils.print_red("An error occurred during disabling:", str(e))
 
 def install_zip_addon_from_blender(
     zip_file: str, 
