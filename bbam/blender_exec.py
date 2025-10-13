@@ -9,13 +9,30 @@
 
 import re
 import subprocess
-from typing import Optional
+from typing import Optional, List
+import sys
+
+# Compatibility fix for Python 3.7 - subprocess type annotations
+if sys.version_info >= (3, 8):
+    # Python 3.8+ supports subscriptable subprocess.CompletedProcess natively
+    pass
+else:
+    # Python 3.7 monkey patch
+    _original_completed_process = subprocess.CompletedProcess
+    
+    class CompletedProcess:
+        def __class_getitem__(cls, item):
+            return _original_completed_process
+    
+    # Only patch if not already done (avoid reload issues)
+    if not hasattr(subprocess.CompletedProcess, '__class_getitem__'):
+        subprocess.CompletedProcess = CompletedProcess
 
 def build_extension(
     src: str,
     dst: str,
     blender_executable_path: str
-):
+) -> subprocess.CompletedProcess[str]:
     """
     Builds an extension using Blender's executable with specified source and destination paths.
 
@@ -27,7 +44,7 @@ def build_extension(
     Returns:
         subprocess.CompletedProcess: The result of the subprocess command execution.
     """
-    command = [
+    command: List[str] = [
         blender_executable_path,
         '--background',
         '--factory-startup',
@@ -41,7 +58,7 @@ def build_extension(
     return result
 
 def get_build_file(
-    build_result
+    build_result: subprocess.CompletedProcess[str]
 ) -> Optional[str]:
     """
     Extracts the path of the created build file from the build result output.
@@ -60,7 +77,7 @@ def get_build_file(
 def validate_extension(
     path: str, 
     blender_executable_path: str
-):
+) -> subprocess.CompletedProcess[str]:
     """
     Validates the built extension using Blender's executable.
 
