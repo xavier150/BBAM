@@ -111,7 +111,7 @@ def generate_addon_files(
                     file_path = os.path.join(root, file)
 
                     try:
-                        with open(file_path, 'r') as f:
+                        with open(file_path, 'r', encoding='utf-8') as f:
                             content = f.read()
                         
                         for modification_key in build_config.hard_modifications:
@@ -119,7 +119,7 @@ def generate_addon_files(
                                 for modification in build_config.hard_modifications[modification_key]:
                                     content = content.replace(modification["search"], modification["replace"])
 
-                        with open(file_path, 'w') as f:
+                        with open(file_path, 'w', encoding='utf-8') as f:
                             f.write(content)
                     except Exception as e:
                         text = f"Error applying hard modifications to {file_path}: {e}"
