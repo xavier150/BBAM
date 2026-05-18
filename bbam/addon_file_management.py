@@ -17,7 +17,7 @@ from . import bl_info_generate
 from . import config
 from . import blender_exec
 from .bbam_addon_config.bbam_addon_config_type import BBAM_AddonConfig, BBAM_AddonBuild, BBAM_GenerateMethod
-
+from . import utils
 
 def copy_addon_folder(
     src: str,
@@ -154,15 +154,17 @@ def zip_addon_folder(
     Creates a ZIP archive of the addon folder, either through Blender's extension command
     or by using a simple ZIP method.
     """
-    generate_method = build_config.generate_method
+    generate_using_extension_command = utils.get_generate_using_extension_command(build_config.generate_method, build_config.blender_version_min)
 
     # Define output file path and ensure the output directory exists
     output_filepath = get_zip_output_filename(addon_path, addon_config, build_config)
     output_dir = os.path.dirname(output_filepath)
     os.makedirs(output_dir, exist_ok=True)
 
+
+
     # Run addon zip process based on the specified generation method
-    if generate_method == BBAM_GenerateMethod.EXTENTION_COMMAND:
+    if generate_using_extension_command:
         print("Start build with extension command")
         result = blender_exec.build_extension(src, output_filepath, blender_executable_path)
         if result.returncode == 0:
@@ -179,7 +181,7 @@ def zip_addon_folder(
             print(result.stderr, file=sys.stderr)
             return None
 
-    elif generate_method == BBAM_GenerateMethod.SIMPLE_ZIP:
+    else:
         print("Start creating simple ZIP file with root folder using shutil")
 
         # Specify the root folder name inside the ZIP file
@@ -206,10 +208,11 @@ def validate_zip_file(
     """
     Validates the generated ZIP file
     """
-    generate_method = build_config.generate_method
+    generate_using_extension_command = utils.get_generate_using_extension_command(build_config.generate_method, build_config.blender_version_min)
+
 
         # Run addon zip process based on the specified generation method
-    if generate_method == BBAM_GenerateMethod.EXTENTION_COMMAND:
+    if generate_using_extension_command:
         print("Start validate with extension command")
         result = blender_exec.validate_extension(zip_file, blender_executable_path)
         if result.returncode == 0:
@@ -221,7 +224,7 @@ def validate_zip_file(
             print(result.stderr, file=sys.stderr)
             return False
 
-    elif generate_method == BBAM_GenerateMethod.SIMPLE_ZIP:
+    else:
         print("No validation needed for SIMPLE_ZIP method.")
         return True
     
