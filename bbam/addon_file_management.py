@@ -16,7 +16,7 @@ from . import manifest_generate
 from . import bl_info_generate
 from . import config
 from . import blender_exec
-from .bbam_addon_config.bbam_addon_config_type import BBAM_AddonConfig, BBAM_AddonBuild, BBAM_GenerateMethod
+from .bbam_addon_config.bbam_addon_config_type import BBAM_AddonConfig, BBAM_AddonBuild
 from . import utils
 
 def copy_addon_folder(
@@ -95,11 +95,13 @@ def generate_addon_files(
     build_config: BBAM_AddonBuild,
     show_debug: bool = True
 ) -> None:
-    generate_method = build_config.generate_method
-    if generate_method == BBAM_GenerateMethod.EXTENTION_COMMAND:
+    
+    generate_using_extension_command = utils.get_generate_using_extension_command(build_config.generate_method, build_config.blender_version_min)
+
+    if generate_using_extension_command:
         new_manifest = manifest_generate.generate_new_manifest(addon_config, build_config)
         manifest_generate.save_addon_manifest(addon_path, new_manifest, show_debug)
-    elif generate_method == BBAM_GenerateMethod.SIMPLE_ZIP:
+    else:
         new_manifest = bl_info_generate.generate_new_bl_info(addon_config, build_config)
         bl_info_generate.update_file_bl_info(addon_path, new_manifest, show_debug)
 
