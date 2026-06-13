@@ -1,9 +1,7 @@
-# BleuRaven Blender Addons
-/generated_builds
+# Other
 **.zip
 **.blend[1-32]*
 .git/
-.vscode/
 .vs/
 
 # Byte-compiled / optimized / DLL files
