@@ -179,7 +179,7 @@ class BBAM_AddonBuild:
                 print(f"Error: '{key}' key not found in the provided data.")
                 return False
             
-        # Depercated check
+        # Deprecated check
         if "generate_method" in data:
             print("Warning: 'generate_method' key is deprecated. BBAM now automatically detects the generate method. You can use 'forced_generate_method' instead if you want to force a specific method.")
 

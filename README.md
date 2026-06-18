@@ -34,10 +34,10 @@ for dir in addon_directories:
     spec.loader.exec_module(module)
 ```
 
-3. You will found a new file "addon_generate_config.json" at the root of your addons. Edit it with you addon config.
-4. Run again the example script to generate and install you addons.  
-5. Read the Blender console to see details about the generate and potential issues.  
-  You will find the zip files in generated_build at the side of your addon.
+3. You will find a new file "addon_generate_config.json" at the root of your addons. Edit it with your addon config.
+4. Run the example script again to generate and install your addons.  
+5. Read the Blender console to see details about the generation process and potential issues.  
+    You will find the ZIP files in generated_build alongside your addon.
 
 ![image](https://github.com/user-attachments/assets/85fc6fe6-4d17-4441-bd4e-4fb6d0d6809e)
 
@@ -46,10 +46,10 @@ for dir in addon_directories:
 - With BBAM no need to create a blender_manifest.toml or a bl_info = {} in the __init__.py file.  
   You set all the addon config in "addon_generate_config.json"
 
-- BBAM can generate several addon builds, depending the use. See the addon addon_generate_config.json Exemple
+- BBAM can generate several addon builds, depending on your use case. See the addon_generate_config.json example.
 
 ### Example addon_generate_config.json
-This is the file use in my addon [Blender For UnrealEngine]https://github.com/xavier150/Blender-For-UnrealEngine-Addons
+This is the file used in my addon [Blender For UnrealEngine](https://github.com/xavier150/Blender-For-UnrealEngine-Addons)
 
 ```json
 {
@@ -125,7 +125,7 @@ This is the file use in my addon [Blender For UnrealEngine]https://github.com/xa
 }
 ```
 
-I will add more detail in the wiki later if peoples use it and need help. Feel free to ask on my Discord.
+I will add more details in the wiki later if people use it and need help. Feel free to ask on my Discord.
 
 ## Discord Community
 If you need help or want to check out my side projects, join the Discord community!  
