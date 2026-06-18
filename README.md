@@ -86,7 +86,7 @@ This is the file use in my addon [Blender For UnrealEngine]https://github.com/xa
 
     "builds": {
         "unrealengine_assets_exporter_4.2": {   
-            "generate_method": "EXTENTION_COMMAND",
+            "generate_method": "EXTENSION_COMMAND",
             "auto_install_range": [[4,2,0], [4,3,0]],
             "naming": "{Name}-{Version}.zip",
             "module": "blender-for-unrealengine", 
