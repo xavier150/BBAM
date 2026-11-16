@@ -20,7 +20,7 @@ SPDX_LICENSE_IDENTIFIER_PATTERN = re.compile(
 )
 
 
-def get_spdx_license_identifiers(licenses: Sequence[str]) -> Set[str]:
+def get_spdx_license_identifiers(licenses: Sequence[object]) -> Set[str]:
     identifiers: Set[str] = set()
 
     for license_value in licenses:
@@ -42,7 +42,7 @@ def get_spdx_license_identifiers(licenses: Sequence[str]) -> Set[str]:
 
     return identifiers
 
-def get_normalized_exclude_paths(exclude_paths: Sequence[str]) -> Set[str]:
+def get_normalized_exclude_paths(exclude_paths: Sequence[object]) -> Set[str]:
     normalized_paths: Set[str] = set()
 
     for exclude_path in exclude_paths:
@@ -76,8 +76,8 @@ def is_path_excluded(relative_path: str, exclude_paths: Set[str]) -> bool:
 
 def validate_spdx_license_headers(
     addon_path: str,
-    licenses: Sequence[str],
-    exclude_paths: Sequence[str] = (),
+    licenses: Sequence[object],
+    exclude_paths: Sequence[object] = (),
     file_extensions: Tuple[str, ...] = (".py",),
 ) -> bool:
     try:
